@@ -2,17 +2,20 @@
 #! /usr/bin/env python
 
 import time
-
+import cPickle as pickle
 #sys.path.insert(0, 'tweibo.zip')
 from tweibo import *
+import ConfigParser
 
+config = ConfigParser.ConfigParser()
+config.read('config.ini')
 # 换成你的 APPKEY
-APP_KEY = "801376349"
-APP_SECRET = "c057534d14cba920579f2d54005e0c06"
-CALLBACK_URL = "https://github.com"
+APP_KEY = config.get('APPKEY', 'APP_KEY')
+APP_SECRET = config.get('APPKEY', 'APP_SECRET')
+CALLBACK_URL = config.get('APPKEY', 'CALLBACK_URL')
 # 请先按照 https://github.com/upbit/tweibo-pysdk/wiki/OAuth2Handler 的鉴权说明填写 ACCESS_TOKEN 和 OPENID
-ACCESS_TOKEN = ""
-OPENID = ""
+ACCESS_TOKEN = config.get('APPKEY', 'ACCESS_TOKEN')
+OPENID = config.get('APPKEY', 'OPENID')
 IMG_EXAMPLE = "example.png"
 
 # 返回text是unicode，设置默认编码为utf8
@@ -51,20 +54,22 @@ def tweibo_test():
     #print ">> time=%s, http://t.qq.com/p/t/%s" % (tweet2.data.time, tweet2.data.id)
 
     # GET /statuses/user_timeline
-    #user_timeline = api.get.statuses__user_timeline(format="json", name="qqfarm", reqnum=3, pageflag=0, lastid=0, pagetime=0, type=3, contenttype=0)
-    #for idx, tweet in enumerate(user_timeline.data.info):
-    #    print "[%d] http://t.qq.com/p/t/%s, (type:%d) %s" % (idx+1, tweet.id, tweet.type, tweet.text)
+    user_timeline = api.get.statuses__user_timeline(format="json", name="qqfarm", reqnum=1, pageflag=0, lastid=0, pagetime=0, type=3, contenttype=0)
+    for idx, tweet in enumerate(user_timeline.data.info):
+        f1 = file('weibo/' + tweet.name + '/' + tweet.id + '.pkl','wb')
+        pickle.dump(tweet, f1, True)
+        #print "[%d] http://t.qq.com/p/t/%s, (type:%d) %s" % (idx+1, tweet.id, tweet.type, tweet.text)
 
     # UPLOAD /t/upload_pic
-    pic1 = api.upload.t__upload_pic(format="json", pic_type=2, pic=open(IMG_EXAMPLE, "rb"))
-    print ">> IMG: %s" % (pic1.data.imgurl)
+    #pic1 = api.upload.t__upload_pic(format="json", pic_type=2, pic=open(IMG_EXAMPLE, "rb"))
+    #print ">> IMG: %s" % (pic1.data.imgurl)
 
     # POST /t/add_pic_url
-    content_str2 = "[from PySDK] add pic demo: %s, time %s" % (IMG_EXAMPLE, time.time())
-    pic_urls = "%s" % (pic1.data.imgurl)
-    tweet_pic1 = api.post.t__add_pic_url(format="json", content=content_str2, pic_url=pic_urls, clientip="10.0.0.1")
-    print ">> time=%s, http://t.qq.com/p/t/%s" % (tweet_pic1.data.time, tweet_pic1.data.id)
+    #content_str2 = "[from PySDK] add pic demo: %s, time %s" % (IMG_EXAMPLE, time.time())
+    #pic_urls = "%s" % (pic1.data.imgurl)
+    #tweet_pic1 = api.post.t__add_pic_url(format="json", content=content_str2, pic_url=pic_urls, clientip="10.0.0.1")
+    #print ">> time=%s, http://t.qq.com/p/t/%s" % (tweet_pic1.data.time, tweet_pic1.data.id)
 
 if __name__ == '__main__':
-    #access_token_test()
+   # access_token_test()
     tweibo_test()
