@@ -6,6 +6,8 @@ import cPickle as pickle
 #sys.path.insert(0, 'tweibo.zip')
 from tweibo import *
 import ConfigParser
+import os
+import sched
 
 config = ConfigParser.ConfigParser()
 config.read('config.ini')
@@ -35,6 +37,20 @@ def access_token_test():
     oauth.set_app_key_secret(APP_KEY, APP_SECRET, CALLBACK_URL)
     print oauth.get_access_token_url()
 
+def checkdir(path):
+    if os.path.exists(path) == 0:
+        os.mkdir(path)
+
+
+def gettimelie(api, name):
+    user_timeline = api.get.statuses__user_timeline(format="json", name=name,
+            reqnum=100, pageflag=0, lastid=0, pagetime=0, type=3, contenttype=0)
+    for idx, tweet in enumerate(user_timeline.data.info):
+        checkdir('weibo/' + tweet.name)
+        f1 = file('weibo/' + tweet.name + '/' + tweet.id + '.pkl','wb')
+        pickle.dump(tweet, f1, True)
+
+
 def tweibo_test():
     oauth = OAuth2Handler()
     oauth.set_app_key_secret(APP_KEY, APP_SECRET, CALLBACK_URL)
@@ -42,6 +58,7 @@ def tweibo_test():
     oauth.set_openid(OPENID)
 
     api = API(oauth)
+    #userlist = open('weibo/list', 'w')
     #api = API(oauth, host="127.0.0.1", port=8888)       # Init API() with proxy
 
     # GET /t/show
@@ -54,12 +71,23 @@ def tweibo_test():
     #print ">> time=%s, http://t.qq.com/p/t/%s" % (tweet2.data.time, tweet2.data.id)
 
     # GET /statuses/user_timeline
-    user_timeline = api.get.statuses__user_timeline(format="json", name="qqfarm", reqnum=1, pageflag=0, lastid=0, pagetime=0, type=3, contenttype=0)
-    for idx, tweet in enumerate(user_timeline.data.info):
-        f1 = file('weibo/' + tweet.name + '/' + tweet.id + '.pkl','wb')
-        pickle.dump(tweet, f1, True)
-        #print "[%d] http://t.qq.com/p/t/%s, (type:%d) %s" % (idx+1, tweet.id, tweet.type, tweet.text)
+    #user_timeline = api.get.statuses__user_timeline(format="json", name="qqfarm", reqnum=1, pageflag=0, lastid=0, pagetime=0, type=3, contenttype=0)
+    #for idx, tweet in enumerate(user_timeline.data.info):
+    #    checkdir('weibo/' + tweet.name)
+    #    f1 = file('weibo/' + tweet.name + '/' + tweet.id + '.pkl','wb')
+    #    pickle.dump(tweet, f1, True)
+    #    #print "[%d] http://t.qq.com/p/t/%s, (type:%d) %s" % (idx+1, tweet.id, tweet.type, tweet.text)
 
+    users_timeline = api.get.statuses__public_timeline(format="json")
+    #print users_timeline.data.user
+    for i in users_timeline.data.user:
+        try:
+            gettimelie(api, i)
+        except:
+            print 'error'
+    #    userlist.write(i + '\n')
+    #    print time.time(), "Success!:", i
+    #userlist.close()
     # UPLOAD /t/upload_pic
     #pic1 = api.upload.t__upload_pic(format="json", pic_type=2, pic=open(IMG_EXAMPLE, "rb"))
     #print ">> IMG: %s" % (pic1.data.imgurl)
@@ -71,5 +99,11 @@ def tweibo_test():
     #print ">> time=%s, http://t.qq.com/p/t/%s" % (tweet_pic1.data.time, tweet_pic1.data.id)
 
 if __name__ == '__main__':
-   # access_token_test()
-    tweibo_test()
+    scheduler = sched.scheduler(time.time, time.sleep)
+    print 'START:', time.time()
+    for i in range(1,86400):
+        scheduler.enter(i, 1, tweibo_test, ())
+    # access_token_test()
+    # tweibo_test()
+
+scheduler.run()

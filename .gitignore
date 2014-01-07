@@ -1,6 +1,11 @@
 *.pyc
-config.ini
 *.swp
 *~
-config.ini
 config.my
+weibo/
+build/
+builddist/
+builddistsetup.py
+test.egg-info/
+dist/
+config.ini  export-ignore
