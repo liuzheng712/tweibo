@@ -12,12 +12,13 @@ import sched
 config = ConfigParser.ConfigParser()
 config.read('config.ini')
 # 换成你的 APPKEY
-APP_KEY = config.get('APPKEY', 'APP_KEY')
-APP_SECRET = config.get('APPKEY', 'APP_SECRET')
-CALLBACK_URL = config.get('APPKEY', 'CALLBACK_URL')
+APP_KEY = config.get('APPKEY', 'appkey')
+APP_SECRET = config.get('APPKEY', 'appsecret')
+CALLBACK_URL = "https://github.com"
 # 请先按照 https://github.com/upbit/tweibo-pysdk/wiki/OAuth2Handler 的鉴权说明填写 ACCESS_TOKEN 和 OPENID
-ACCESS_TOKEN = config.get('APPKEY', 'ACCESS_TOKEN')
-OPENID = config.get('APPKEY', 'OPENID')
+ACCESS_TOKEN = config.get('APPKEY', 'access_token')
+OPENID = config.get('APPKEY', 'openid')
+OPENKEY = config.get('APPKEY', 'openkey')
 IMG_EXAMPLE = "example.png"
 
 # 返回text是unicode，设置默认编码为utf8
@@ -55,7 +56,7 @@ def tweibo_test():
     oauth = OAuth2Handler()
     oauth.set_app_key_secret(APP_KEY, APP_SECRET, CALLBACK_URL)
     oauth.set_access_token(ACCESS_TOKEN)
-    oauth.set_openid(OPENID)
+    oauth.set_openid(OPENID, OPENKEY)
 
     api = API(oauth)
     #userlist = open('weibo/list', 'w')
@@ -105,5 +106,4 @@ if __name__ == '__main__':
         scheduler.enter(i, 1, tweibo_test, ())
     # access_token_test()
     # tweibo_test()
-
-scheduler.run()
+    scheduler.run()

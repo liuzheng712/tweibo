@@ -31,7 +31,7 @@ class OAuth2Handler(object):
         self.access_token = str(access_token)
         self.expires = int(time.time()) + float(expires_in)
 
-    def set_openid(self, openid, openkey=None):
+    def set_openid(self, openid, openkey):
         self.openid = openid
         self.openkey = openkey
 
