@@ -59,7 +59,7 @@ create table weibo
   geo text,
   head char(70),
   https_head char(80),
-  image char(255),
+  image text,
   isrealname char(4),
   isvip char(4),
   jing char(10),

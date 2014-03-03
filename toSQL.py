@@ -27,15 +27,16 @@ def fileRead(sql, user):
             continue
         tweibo = [tw.id, tw.name, tw.nick, tw.city_code, tw.count,
             tw.country_code, tw.emotiontype, tw.emotionurl, matchFrom(tw), tw.fromurl,
-            tw.geo, tw.head, tw.https_head, tw.image, tw.isrealname, tw.isvip,
+            tw.geo, tw.head, tw.https_head, str(tw.image), tw.isrealname, tw.isvip,
             tw.jing, tw.latitude, tw.location, tw.longitude, tw.mcount, tw.music,
             tw.openid, tw.origtext, tw.province_code, tw.readcount, tw.self,
             tw.source, tw.status, tw.text, tw.timestamp, tw.type, tw.video, tw.wei]
         #print tweibo
-        try:
-            picInsert(sql, tw.pic)
-        except:
-            logging.warning('Can\'t Insert User %s pic:weiboID %s from file %s',tw.name,tw.id,filename)
+        if len(str(tw.image)) > 5:
+            try:
+                picInsert(sql, tw.pic)
+            except:
+                logging.warning('Can\'t Insert User %s pic:weiboID %s from file %s',tw.name,tw.id,filename)
         try:
             curs.execute("insert into weibo values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);",tweibo)
             sql.commit()
@@ -86,7 +87,7 @@ def picInsert(sql, pic):
                 p.pic_width, p.pic_size]
         curs.execute("insert into pic values(%s,%s,%s,%s,%s,%s,%s);",pInfo)
         sql.commit()
-
+    return 1
 
 
 
@@ -136,7 +137,7 @@ if __name__ == "__main__":
 
     weibo = os.listdir('ww')
     for ren in weibo:
-        print ren
+        #print ren
         mysql(ren)
     print "done"
     #ren = os.listdir('ww/' + weibo[0]  )
