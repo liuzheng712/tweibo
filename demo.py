@@ -51,14 +51,19 @@ def gettimelie(api, name):
         f1 = file('weibo/' + tweet.name + '/' + tweet.id + '.pkl','wb')
         pickle.dump(tweet, f1, True)
 
-
-def tweibo_test():
+def tweibo_api():
     oauth = OAuth2Handler()
     oauth.set_app_key_secret(APP_KEY, APP_SECRET, CALLBACK_URL)
     oauth.set_access_token(ACCESS_TOKEN)
     oauth.set_openid(OPENID, OPENKEY)
-
     api = API(oauth)
+    return api
+
+
+
+
+def tweibo_test():
+    api = tweibo_api()
     #userlist = open('weibo/list', 'w')
     #api = API(oauth, host="127.0.0.1", port=8888)       # Init API() with proxy
 
@@ -100,10 +105,12 @@ def tweibo_test():
     #print ">> time=%s, http://t.qq.com/p/t/%s" % (tweet_pic1.data.time, tweet_pic1.data.id)
 
 if __name__ == '__main__':
-    scheduler = sched.scheduler(time.time, time.sleep)
-    print 'START:', time.time()
-    for i in range(1,86400):
-        scheduler.enter(i, 1, tweibo_test, ())
-    # access_token_test()
-    # tweibo_test()
-    scheduler.run()
+    #scheduler = sched.scheduler(time.time, time.sleep)
+    #print 'START:', time.time()
+    #for i in range(1,86400):
+    #    scheduler.enter(i, 1, tweibo_test, ())
+    ## access_token_test()
+    ## tweibo_test()
+    #scheduler.run()
+    api = tweibo_api()
+    print api.get.user__other_info(format="json",name="sos777")
