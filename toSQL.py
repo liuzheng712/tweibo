@@ -99,10 +99,16 @@ def matchFrom(tw):
 def mysql(name):
     import MySQLdb
     import cPickle as pickle
+    import ConfigParser
     #f1 = file('ww/sos777/238240103807467.pkl','rb')
     #tweet = pickle.load(f1)
-    sql = MySQLdb.connect(host='192.168.1.110', user='root',passwd='liuzheng',
-            charset='utf8')
+    config = ConfigParser.ConfigParser()
+    config.read('config.ini')
+    host = config.get('MySQL', 'host')
+    user = config.get('MySQL', 'username')
+    port = config.get('MySQL', 'port') 
+    passwd = config.get('MySQL', 'passwd')
+    sql = MySQLdb.connect(host=host, user=user, passwd=passwd, port=port, charset='utf8')
     #curs = sql.cursor()
     #curs.execute("create database pythondb")
     #conn.select_db('pythondb')
