@@ -108,7 +108,7 @@ def mysql(name):
     user = config.get('MySQL', 'username')
     port = config.get('MySQL', 'port') 
     passwd = config.get('MySQL', 'passwd')
-    sql = MySQLdb.connect(host=host, user=user, passwd=passwd, port=port, charset='utf8')
+    sql = MySQLdb.connect(host=host, user=user, passwd=passwd, port=int(port), charset='utf8')
     #curs = sql.cursor()
     #curs.execute("create database pythondb")
     #conn.select_db('pythondb')
