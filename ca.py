@@ -121,7 +121,7 @@ class SimpleClient:
         """)
         self.session.execute("""
             CREATE TABLE tweibo.pic(
-                url primary text,
+                url text,
                 pic_XDPI text,
                 pic_YDPI text,
                 pic_height text,
