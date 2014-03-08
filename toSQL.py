@@ -39,7 +39,7 @@ def fileRead(sql, user):
                 logging.warning('Can\'t Insert User %s pic:weiboID %s from file %s',tw.name,tw.id,filename)
         try:
             curs.execute("insert into weibo values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);",tweibo)
-            sql.commit()
+            #sql.commit()
         except:
             logging.warning('Can\'t Insert User %s:weiboID %s from file %s',tw.name,tw.id,filename)
 
@@ -69,7 +69,7 @@ def userInfo(sql, name):
             ui.send_private_flag, ui.tweetnum, ui.verifyinfo ]
     try:
         curs.execute("insert into userInfo values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",userinfo)
-        sql.commit()
+        #sql.commit()
         return 1
     except:
         return 0
@@ -86,7 +86,7 @@ def picInsert(sql, pic):
         pInfo = [p.url, p.pic_YDPI, p.pic_type, p.pic_height, p.pic_XDPI,
                 p.pic_width, p.pic_size]
         curs.execute("insert into pic values(%s,%s,%s,%s,%s,%s,%s);",pInfo)
-        sql.commit()
+        #sql.commit()
     return 1
 
 
@@ -97,7 +97,7 @@ def matchFrom(tw):
     #print pattern.search(str(tw)).group(1).decode('unicode-escape')
     return pattern.search(str(tw)).group(1).decode('unicode-escape')
 
-def mysql(name):
+def mysql():
     import MySQLdb
     import cPickle as pickle
     import ConfigParser
@@ -120,9 +120,8 @@ def mysql(name):
     #sql.commit()
     #curs.close()
     #userInfo(sql, 'sos777')
-    fileRead(sql, name)
-    sql.close()
 #    print "done!"
+    return sql
 
 
 if __name__ == "__main__":
@@ -134,11 +133,14 @@ if __name__ == "__main__":
     import time
     logging.basicConfig(filename='tweibo.log',level=logging.DEBUG)
     logging.warning("################Start at %s ################",time.localtime(time.time()))
-
+    sql = mysql()
     weibo = os.listdir('ww')
-    for ren in weibo:
+    for ren in weibo[weibo.index('chenzhiyun9683'):]:
         #print ren
-        mysql(ren)
+        fileRead(sql, ren)
+        #mysql(ren)
+    sql.commit()
+    sql.close()
     print "done"
     #ren = os.listdir('ww/' + weibo[0]  )
     ##print (file('ww/' + weibo[0] +'/'+ren[1],'rb'))
