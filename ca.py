@@ -41,18 +41,18 @@ class SimpleClient:
                 name text,
                 nick text,
                 location text,
-                ex text, 
+                sex int, 
                 email text,
-                birth_day text,
-                birth_month text,
-                birth_year text,
+                birth_day int,
+                birth_month int,
+                birth_year int,
                 city_code text,
-                comp text,
+                comp map,
                 country_code text,
-                edu text,
-                exp text,
-                fansnum text,
-                favnum text,
+                edu map,
+                exp int,
+                fansnum varint,
+                favnum varint,
                 head text,
                 homecity_code text,
                 homecountry_code text,
@@ -60,78 +60,122 @@ class SimpleClient:
                 homeprovince_code text,
                 hometown_code text,
                 https_head text,
-                idolnum text,
-                industry_code text,
+                idolnum varint,
+                industry_code int,
                 introduction text,
-                isent text,
-                ismyblack text,
-                ismyfans text,
-                ismyidol text,
-                isrealname text,
-                isvip text,
-                level text,
-                mutual_fans_num text,
+                isent boolean,
+                ismyblack boolean,
+                ismyfans boolean,
+                ismyidol boolean,
+                isrealname int,
+                isvip boolean,
+                level int,
+                mutual_fans_num varint,
                 openid text,
                 province_code text,
-                regtime text,
-                send_private_flag text,
-                tweetnum text,
-                verifyinfo text
+                regtime int,
+                send_private_flag int,
+                tweetnum int,
+                tag map,
+                verifyinfo text,
+                analized text
             );
         """)
         self.session.execute("""
             CREATE TABLE tweibo.weibo(
                 id uuid,
-                weiboid text,
+                weiboid int,
                 name text,
                 nick text,
                 city_code text,
-                count text,
+                count int,
                 country_code text,
-                emotiontype text,
+                emotiontype int,
                 emotionurl text,
                 t_from text,
                 fromurl text,
                 geo text,
                 head text,
                 https_head text,
-                image text,
-                isrealname text,
-                isvip text,
-                jing text,
-                latitude text,
+                isrealname int,
+                isvip boolean,
+                image map,
+                music map,
+                video map,
+                jing int,
+                latitude int,
                 location text,
-                longitude text,
-                mcount text,
-                music text,
+                longitude int,
+                mcount int,
                 openid text,
                 origtext text,
-                province_code text,
-                readcount text,
-                self text,
+                province_code int,
+                readcount int,
+                self int,
                 source text,
-                status text,
+                status int,
                 t_text text,
-                t_timestamp text,
-                type text,
-                video text,
+                t_timestamp int,
+                type int,
                 wei text,
+                analized text,
                 PRIMARY KEY (id, weiboid, name)
             );
         """)
-        self.session.execute("""
-            CREATE TABLE tweibo.pic(
-                url text,
-                pic_XDPI text,
-                pic_YDPI text,
-                pic_height text,
-                pic_size text,
-                pic_type text,
-                pic_width text,
-                PRIMARY KEY (url)
-            )
-                """)
-        log.info('tweibo keyspace and schema created.')
+#        self.session.execute("""
+#            CREATE TABLE tweibo.comp(
+#                begin_year int;
+#                company_name text;
+#                department_name text;
+#                end_year int;
+#                id text;
+#            );
+#        """)
+#        self.session.execute("""
+#            CREATE TABLE tweibo.edu(
+#            departmentid text;
+#            id text;
+#            level text;
+#            schoolid text;
+#            year int;
+#
+#            );
+#        """)
+#        self.session.execute("""
+#        CREATE TABLE tweibo.tag(
+#                id text;
+#                name text
+#            );
+#        """)
+#        self.session.execute("""
+#            CREATE TABLE tweibo.pic(
+#                url text,
+#                pic_XDPI text,
+#                pic_YDPI text,
+#                pic_height text,
+#                pic_size text,
+#                pic_type text,
+#                pic_width text,
+#                PRIMARY KEY (url)
+#            );
+#        """)
+#        log.info('tweibo keyspace and schema created.')
+#        self.session.execute("""
+#                CREATE TABLE tweibo.video(
+#                picurl text;
+#                player text;
+#                realurl text;
+#                shorturl text;
+#                title text;
+#            );
+#        """)
+#        self.session.execute("""
+#                CREATE TABLE tweibo.music(
+#                author text;
+#                url text;
+#                title text;
+#            );
+#        """)
 
 
     def load_data(self):
@@ -175,6 +219,7 @@ def main():
     client.connect(['192.168.1.47'])
     client.create_schema()
     time.sleep(10)
+
     #client.load_data()
     #client.query_schema()
     client.close()
