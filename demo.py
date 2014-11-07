@@ -113,4 +113,5 @@ if __name__ == '__main__':
     ## tweibo_test()
     #scheduler.run()
     api = tweibo_api()
-    print api.get.user__other_info(format="json",name="sos777")
+    print api.get.statuses__public_timeline(format="json")
+    # print api.get.user__other_info(format="json",name="sos777")
